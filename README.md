@@ -1,7 +1,10 @@
 # Golang Concurrent and Functional Library.
 A Golang implementation of Functional Language's functions like `Map`, `Filter`, `Fold`, but with a touch of concurrency in the mix.
 
-Why 
+## Use cases
+
+Functional Programming like code is more readeable/clean and because some of the functions applied are [pure](https://en.wikipedia.org/wiki/Pure_function), we can apply these concurrently.
+
 
 
 ## Installation
