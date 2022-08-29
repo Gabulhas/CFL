@@ -15,8 +15,10 @@ func exampleSquareNumbers() {
 	squareNumbersFunc := func(a int) int {
 		return a * a
 	}
-	splits := 3
-	result := cfl.Map(myNumbers, squareNumbersFunc, splits)
+	options := cfl.NewMapOptions()
+	options.SetConcurrentSplits(2)
+
+	result := cfl.Map(myNumbers, squareNumbersFunc, options)
 	fmt.Println("My result:", result)
 }
 

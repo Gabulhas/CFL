@@ -19,12 +19,7 @@ func mapConcurrentOrdered[T, U any](s []T, f func(T) U) []U {
 	return result
 }
 
-func mapConcurrentSplitedOrdered[T, U any](s []T, f func(T) U, splits ...int) []U {
-	n_splits := 1
-	if len(splits) > 0 {
-		n_splits = splits[0]
-	}
-
+func mapConcurrentSplitedOrdered[T, U any](s []T, f func(T) U, n_splits int) []U {
 	elementsPerSplit := len(s) / n_splits
 	leftover := len(s) % n_splits
 
@@ -71,17 +66,19 @@ s is the slice
 f is the function
 options is an MapOptions
 */
-func Map[T, U any](s []T, f func(T) U, splits ...int) []U {
+func Map[T, U any](s []T, f func(T) U, options ...*mapOptions) []U {
 	n_splits := 1
-	if len(splits) > 0 {
-		n_splits = splits[0]
+	if len(options) > 0 {
+		n_splits = options[0].Splits
+	} else {
+		n_splits = 1
 	}
 	if n_splits == 0 {
 		return mapConcurrentOrdered(s, f)
 	} else if n_splits == 1 {
 		return mapSequentialOrdered(s, f)
 	} else {
-		return mapConcurrentSplitedOrdered(s, f, splits...)
+		return mapConcurrentSplitedOrdered(s, f, n_splits)
 	}
 }
 
