@@ -19,34 +19,22 @@ func mapConcurrentOrdered[T, U any](s []T, f func(T) U) []U {
 	return result
 }
 
-func mapConcurrentSplitedOrdered[T, U any](s []T, f func(T) U, n_splits int) []U {
-	elementsPerSplit := len(s) / n_splits
-	leftover := len(s) % n_splits
+func mapConcurrentSplitedOrdered[T, U any](s []T, f func(T) U, numberOfSplits int) []U {
+	ranges := SplitRanges(len(s), numberOfSplits)
 
 	result := make([]U, len(s))
 
 	var wg sync.WaitGroup
 
-	for sp := 0; sp <= n_splits; sp++ {
+	for _, r := range ranges {
 		wg.Add(1)
 
-		go func(sp int) {
+		go func(r SplitRange) {
 			defer wg.Done()
-			rest := 0
-			if sp == n_splits {
-				if leftover != 0 {
-					rest = leftover
-				} else {
-					return
-				}
-			} else {
-				rest = elementsPerSplit
-			}
-			for index := sp * elementsPerSplit; index < sp*elementsPerSplit+rest; index++ {
+			for index := r.start; index < r.end; index++ {
 				result[index] = f(s[index])
 			}
-
-		}(sp)
+		}(r)
 	}
 	wg.Wait()
 	return result
@@ -66,50 +54,18 @@ s is the slice
 f is the function
 options is an MapOptions
 */
-func Map[T, U any](s []T, f func(T) U, options ...*mapOptions) []U {
-	n_splits := 1
+func Map[T, U any](s []T, f func(T) U, options ...*ConcurrencyOptions) []U {
+	numberOfSplits := 1
 	if len(options) > 0 {
-		n_splits = options[0].Splits
+		numberOfSplits = options[0].Splits
 	} else {
-		n_splits = 1
+		numberOfSplits = 1
 	}
-	if n_splits == 0 {
+	if numberOfSplits == 0 {
 		return mapConcurrentOrdered(s, f)
-	} else if n_splits == 1 {
+	} else if numberOfSplits == 1 {
 		return mapSequentialOrdered(s, f)
 	} else {
-		return mapConcurrentSplitedOrdered(s, f, n_splits)
+		return mapConcurrentSplitedOrdered(s, f, numberOfSplits)
 	}
-}
-
-type mapOptions struct {
-	Splits int
-}
-
-func NewMapOptions() *mapOptions {
-	return &mapOptions{}
-}
-
-/*SetSequential
-Squentially applies a function to each element in the slice.
-*/
-func (mo *mapOptions) SetSequential() {
-	mo.Splits = 1
-}
-
-/*SetConcurrent
-Applies the function to each element in the slice concurrently.
-Each application will be processed on it's own goroutine.
-*/
-func (mo *mapOptions) SetConcurrent() {
-	mo.Splits = 0
-}
-
-/*SetConcurrentSplits
-Applies the function to each element in the slice concurrently.
-The slice will be split in `n` different slices, and each slice will be
-processed on it's own goroutine.
-*/
-func (mo *mapOptions) SetConcurrentSplits(n int) {
-	mo.Splits = n
 }

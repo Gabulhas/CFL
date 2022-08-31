@@ -13,17 +13,9 @@ func square(a int) int {
 
 //
 func exampleSquareNumbers() {
-	myNumbers := []int{1, 2, 3, 4, 5, 6}
+	myNumbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
 
-	fmt.Println("My numbers:", myNumbers)
-
-	options := cfl.NewMapOptions()
-	options.SetConcurrentSplits(2)
-
-	result := cfl.Map(myNumbers, square, options)
+	result := cfl.Map(myNumbers, square, cfl.NewMapOptions().SetConcurrentSplits(4))
 	fmt.Println("My result:", result)
-}
-
-func main() {
-	exampleSquareNumbers()
+	//My result: [1 4 9 16 25 36.....
 }

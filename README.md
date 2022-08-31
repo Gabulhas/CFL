@@ -32,16 +32,22 @@ func square(a int) int {
 
 //
 func exampleSquareNumbers() {
-myNumbers := []int{1, 2, 3, 4, 5, 6}
+    myNumbers := []int{1, 2, 3, 4, 5, 6}
 
-           fmt.Println("My numbers:", myNumbers)
+    fmt.Println("My numbers:", myNumbers)
 
-               options := cfl.NewMapOptions()
-               options.SetConcurrentSplits(2)
+    options := cfl.NewMapOptions()
+    options.SetConcurrentSplits(2)
 
-               result := cfl.Map(myNumbers, square, options)
-               fmt.Println("My result:", result)
+    //Maps the square function to every element of the slice "myNumbers"
+    result := cfl.Map(myNumbers, square, options)
+
+    fmt.Println("My result:", result)
+    //Outputs "My result: [1 4 9 16 25 36]"
 }
 ```
+
+## RoAdMaP
+Implement every helper offered by [fp-go](https://github.com/repeale/fp-go), but making use of concurrency.
 
 Checkout [Examples](/examples) to learn more about this project.
