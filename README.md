@@ -3,7 +3,7 @@ A Golang implementation of Functional Language's functions like `Map`, `Filter`,
 
 ## Use cases
 
-Functional Programming like code is more readeable/clean and because some of the functions applied are [pure](https://en.wikipedia.org/wiki/Pure_function), we can apply these concurrently.
+Functional Programming like code is more readeable/clean and because some of the functions applied are [pure](https://en.wikipedia.org/wiki/Pure_function), we can apply these concurrently without locking.
 
 
 
@@ -49,5 +49,7 @@ func exampleSquareNumbers() {
 
 ## RoAdMaP
 Implement every helper offered by [fp-go](https://github.com/repeale/fp-go), but making use of concurrency.
+
+Also, make it so functions can return channels instead of the whole slice.
 
 Checkout [Examples](/examples) to learn more about this project.
