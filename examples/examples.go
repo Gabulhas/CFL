@@ -39,8 +39,15 @@ func exampleMap() {
 	fmt.Println("[MAP] My numbers squared:", result)
 }
 
+func exampleFlat() {
+	myNestedList := [][]int{{1, 2, 3}, {4, 5}, {6, 7, 8, 9}, {10, 11, 12}, {13, 14}}
+	result := cfl.Flat(myNestedList, cfl.NewMapOptions().SetConcurrentSplits(4))
+	fmt.Println("[FLAT] My numbers as flat:", result)
+}
+
 func main() {
 	exampleEvery()
 	exampleFilter()
 	exampleMap()
+	exampleFlat()
 }
